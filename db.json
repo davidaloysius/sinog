@@ -1,9 +1,9 @@
 {
   "events": [{
-      title: "Shindig 2023",
-      description: "Shindig",
-      venue: "Dumaguete",
-      date: "August 18-20, 2023",
-      players: ["Kalel Reyes"],
+      "title": "Shindig 2023",
+      "description": "Shindig",
+      "venue": "Dumaguete",
+      "date": "August 18-20, 2023",
+      "players": ["Kalel Reyes"],
   }]
 }
