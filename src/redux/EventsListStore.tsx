@@ -18,7 +18,7 @@ export const getEvents = createAsyncThunk("ultimateEvents/get", async () => {
   };
 
   const response = await axios.post(
-    "http://event-server-one.vercel.app/",
+    "http://localhost:8080/",
     {
       collection: "Thugs Ultimate Events",
       database: "ultimate_events",
