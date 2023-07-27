@@ -5,27 +5,60 @@ import EventsListRedux, { getEvents } from "../../redux/EventsListStore";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
+import styled from "styled-components";
+
 // const store = EventsListRedux
 // const [eventsList, setEventsList] = useState<EventCard>([]);
 // console.log(store.getState());
+
+const AppContainer = styled.div`
+  background-color: #f7f7f7;
+`;
+
+const EventList = styled.div`
+  display: flex;
+  padding: 16px;
+  gap: 16px;
+  flex-direction: row;
+  flex-wrap: wrap;
+`;
+
+const Header = styled.div`
+  background-color: #252e28;
+  padding: 32px;
+  color: #f7f7f7;
+`;
+
+const PageTitle = styled.div`
+  font-size: 28px;
+  font-weight: 600;
+`;
+
+const PageSubTitle = styled.div`
+  font-size: 14px;
+`;
+
 const App = () => {
   const dispatch = useDispatch();
   const events = useSelector((state) => state.eventsList.events);
+  console.log(events);
 
   useEffect(() => {
-    dispatch(getEvents());
+    // dispatch(getEvents());
   }, []);
 
   return (
-    <div className="App">
-      <div>title</div>
-      <div className="col-md-3" style={{ border: "1px black solid" }}>
-        <AddNewEventButton />
-        {events.length > 0 &&
-          events.map(({ title }) => <EventCard name={title} />)}
-      </div>
+    <AppContainer>
+      <Header>
+        <PageTitle>SINO G?!</PageTitle>
+        <PageSubTitle>Thugs Ultimate</PageSubTitle>
+      </Header>
+      <EventList>
+        {events.length > 0 && events.map((event) => <EventCard data={event} />)}
+      </EventList>
       <div className="col-md-9"></div>
-    </div>
+      <AddNewEventButton />
+    </AppContainer>
   );
 };
 
