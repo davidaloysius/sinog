@@ -6,6 +6,7 @@ type Props = {
 }
 
 const EventCard = ({name}: Props) => (
+  
   <div className='EventCard'>
     <div className='EventCardText'>Event Name: {name}</div>
   </div>

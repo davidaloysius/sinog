@@ -1,14 +1,37 @@
-import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import '../AddNewEventButton/AddNewEventButton.css'
-import EventCard from '../EventCard/EventCard'
-import eventsLists from '../../hooks/EventsList'
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import "../AddNewEventButton/AddNewEventButton.css";
+import EventCard from "../EventCard/EventCard";
+import { useSelector, useDispatch } from "react-redux";
+import { addEvents } from "../../redux/EventsListStore";
 
+const AddNewEventButton = () => {
+  const dispatch = useDispatch<any>();
 
-const AddNewEventButton = () => (
-  <div className='AddNewEventButton'>
-    <button className='btn btn-success' onClick={eventsLists} style={{width: '100%'}}>Test</button>
-  </div>
-);
+  const addNewEvent = () => {
+    const payload: any = {
+      title: "Shindig 2023",
+      description: "Shindig",
+      venue: "Dumaguete",
+      date: "August 18-20, 2023",
+      players: ["Kalel Reyes"],
+    }
+    dispatch(
+      addEvents(payload)
+    );
+  };
+
+  return (
+    <div className="AddNewEventButton">
+      <button
+        className="btn btn-success"
+        onClick={() => addNewEvent()}
+        style={{ width: "100%" }}
+      >
+        Add Event
+      </button>
+    </div>
+  );
+};
 
 export default AddNewEventButton;
