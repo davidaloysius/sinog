@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import "../AddNewEventButton/AddNewEventButton.css";
 import EventCard from "../EventCard/EventCard";
-import { useSelector, useDispatch } from "react-redux";
 import { addEvents } from "../../redux/EventsListStore";
+import { useDispatch } from "react-redux";
 
 const AddNewEventButton = () => {
   const dispatch = useDispatch<any>();

@@ -16,7 +16,6 @@ const App = () => {
     dispatch(getEvents());
   }, []);
 
-function App() {
   return (
     <div className="App">
       <div>title</div>
