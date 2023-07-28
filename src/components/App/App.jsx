@@ -19,8 +19,8 @@ const AppContainer = styled.div`
 
 const EventList = styled.div`
   display: flex;
-  padding: 16px;
-  gap: 16px;
+  padding: 0 32px 32px 32px;
+  gap: 32px;
   flex-direction: row;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -28,13 +28,12 @@ const EventList = styled.div`
 `;
 
 const Header = styled.div`
-  background-color: #252e28;
   padding: 32px;
-  color: #f7f7f7;
 `;
 
 const PageTitle = styled.div`
-  font-size: 28px;
+  font-family: Bungee;
+  font-size: 62px;
   font-weight: 600;
 `;
 
@@ -68,16 +67,15 @@ const App = () => {
 
   return (
     <AppContainer>
+    {isLoading && <BarLoader width={"100%"} height={6} color={"#252e28"} /> }
       <Header>
-        <PageTitle>SINO G?!</PageTitle>
-        <PageSubTitle>Thugs Ultimate</PageSubTitle>
+        <PageTitle>Sino G?!</PageTitle>
       </Header>
-      {isLoading && <BarLoader width={"100%"} height={6} color={"#252e28"} /> }
       {!isLoading && <EventList>
         {events.length > 0 && events.map((event) => <PlayerDetails data={event} />)}
         {showAdd && <AddEventForm onSubmit={handleSubmit} onCancel={() => setShowAdd(false)} />}
       </EventList>}
-      {!showAdd && <AddNewEventButton onClick={() => setShowAdd(true)} />}
+      {!isLoading && !showAdd && <AddNewEventButton onClick={() => setShowAdd(true)} />}
     </AppContainer>
   );
 };

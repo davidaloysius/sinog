@@ -9,15 +9,37 @@ import moment from "moment";
 import EventCard from "../EventCard/EventCard";
 import Loader from "react-spinners/MoonLoader";
 
-const Banner = styled.div`
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+
+  @media only screen and (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+const Banner = styled.div<any>`
+  background-image: ${({ imageUrl }) => `url(${imageUrl})`};
+  background-size: cover;
   background-color: #313131;
   padding: 0 16px 16px 16px;
-  height: 150px;
-  border-radius: 8px;
+  border-radius: 8px 0 0 8px;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 8px;
+  gap: 16px;
+  flex: 1;
+  box-shadow: 5px 10px 24px #d7d7d7;
+
+  @media only screen and (max-width: 768px) {
+    height: 150px;
+    border-radius: 8px;
+  }
+`;
+
+const ContentWrapper = styled.div`
+  flex: 3;
 `;
 
 const Date = styled.div`
@@ -35,6 +57,7 @@ const Content = styled.div`
 
 const Title = styled.div`
   font-size: 16px;
+  font-family: Bungee;
   font-weight: 600;
 `;
 
@@ -71,6 +94,7 @@ const AddPlayer = styled.button`
   text-align: center;
   color: #f7f7f7;
   font-size: 10px;
+  font-family: Bungee;
   &:hover {
     background: #136f44;
   }
@@ -85,6 +109,7 @@ const CancelPlayer = styled.button`
   color: #313131;
   font-size: 10px;
   background: transparent;
+  font-family: Bungee;
   &:hover {
     text-decoration: underline;
     font-weight: 500;
@@ -94,14 +119,20 @@ const CancelPlayer = styled.button`
 const NewPlayerBottom = styled.div`
   background: #198754a8;
   text-align: center;
-  border-radius: 0px 0px 8px 8px;
-  padding: 8px;
+  border-radius: 0px 0px 8px 0;
+  padding: 12px 8px;
   color: white;
   font-size: 11px;
   text-transform: uppercase;
   cursor: pointer;
+  font-family: Bungee;
+
   &:hover {
     background: #198754;
+  }
+
+  @media only screen and (max-width: 768px) {
+    border-radius: 0px 0px 8px 8px;
   }
 `;
 
@@ -122,6 +153,7 @@ const DateWrapper = styled.div`
   display: flex;
   flex-direction: column;
   text-align: center;
+  font-family: Bungee;
 `;
 
 const Day = styled.div`
@@ -145,8 +177,16 @@ const PlayerDetails = ({ data }: any) => {
   const [showAdd, setShowAdd] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
 
-  const { _id, title, description, venue, fromDate, toDate, players }: any =
-    data;
+  const {
+    _id,
+    title,
+    description,
+    venue,
+    fromDate,
+    toDate,
+    players,
+    imageUrl,
+  }: any = data;
 
   const convertDate = (date) => {
     const momentDate: any = moment(date, "MMMM DD, YYYY");
@@ -203,53 +243,60 @@ const PlayerDetails = ({ data }: any) => {
 
   return (
     <EventCard>
-      <Banner>
-        {convertDate(fromDate)}
-        {toDate && convertDate(toDate)}
-      </Banner>
-      <Content>
-        <Title>{title}</Title>
-        <Venue>{venue}</Venue>
-        <Description>{description}</Description>
-        <PlayerList>
-          <div>Players:</div>
-          <ul>
-            {players &&
-              players.map((player, index) => (
-                <li>
-                  <PlayerItem
-                    name={player}
-                    onDelete={() => handleDeletePlayer(index)}
-                  />
-                </li>
-              ))}
-          </ul>
-        </PlayerList>
-      </Content>
-      {showAdd ? (
-        <NewPlayerForm>
-          <PlayerInput
-            type="text"
-            onChange={(event) => setNewPlayer(event?.target?.value)}
-            value={newPlayer}
-            placeholder="Player Name"
-            disabled={isAdding}
-          />
-          <ActionButton>
-            <CancelPlayer onClick={() => setShowAdd(false)} disabled={isAdding}>
-              CANCEL
-            </CancelPlayer>
-            <AddPlayer onClick={handleAddPlayer} disabled={isAdding}>
-              {isAdding && <Loader size={12} color={"white"} />}ADD PLAYER{" "}
-              <HiArrowRight />
-            </AddPlayer>
-          </ActionButton>
-        </NewPlayerForm>
-      ) : (
-        <NewPlayerBottom onClick={() => setShowAdd(!showAdd)}>
-          Add new player
-        </NewPlayerBottom>
-      )}
+      <Wrapper>
+        <Banner imageUrl={imageUrl}>
+          {convertDate(fromDate)}
+          {toDate && convertDate(toDate)}
+        </Banner>
+        <ContentWrapper>
+          <Content>
+            <Title>{title}</Title>
+            <Venue>{venue}</Venue>
+            <Description>{description}</Description>
+            <PlayerList>
+              <div>Players:</div>
+              <ul>
+                {players &&
+                  players.map((player, index) => (
+                    <li>
+                      <PlayerItem
+                        name={player}
+                        onDelete={() => handleDeletePlayer(index)}
+                      />
+                    </li>
+                  ))}
+              </ul>
+            </PlayerList>
+          </Content>
+          {showAdd ? (
+            <NewPlayerForm>
+              <PlayerInput
+                type="text"
+                onChange={(event) => setNewPlayer(event?.target?.value)}
+                value={newPlayer}
+                placeholder="Player Name"
+                disabled={isAdding}
+              />
+              <ActionButton>
+                <CancelPlayer
+                  onClick={() => setShowAdd(false)}
+                  disabled={isAdding}
+                >
+                  CANCEL
+                </CancelPlayer>
+                <AddPlayer onClick={handleAddPlayer} disabled={isAdding}>
+                  {isAdding && <Loader size={12} color={"white"} />}ADD PLAYER{" "}
+                  <HiArrowRight />
+                </AddPlayer>
+              </ActionButton>
+            </NewPlayerForm>
+          ) : (
+            <NewPlayerBottom onClick={() => setShowAdd(!showAdd)}>
+              Add new player
+            </NewPlayerBottom>
+          )}
+        </ContentWrapper>
+      </Wrapper>
     </EventCard>
   );
 };

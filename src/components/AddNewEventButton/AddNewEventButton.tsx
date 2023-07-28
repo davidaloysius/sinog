@@ -18,8 +18,9 @@ const Button = styled.div`
   text-align: center;
   color: #f7f7f7;
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 14px;
   cursor: pointer;
+  font-family: Bungee;
 
   &:hover {
     background: #41966a;
