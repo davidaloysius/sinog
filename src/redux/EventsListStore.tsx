@@ -31,6 +31,29 @@ export const getEvents = createAsyncThunk("ultimateEvents/get", async () => {
   return data;
 });
 
+export const addEvent = createAsyncThunk<any, any>(
+  "ultimateEvents/addEvent",
+  async (payload) => {
+  
+    const config: any = {
+      headers: { ...headers, "api-url": "insertOne" },
+    };
+
+    const response = await axios.post(
+      baseUrl,
+      {
+        ...mongoConfig,
+        document: {
+          ...payload
+        }
+      },
+      config
+    );
+    const data = (await response) && response.data ? response.data : response;
+    return { ...data, newEvent: {...payload} };
+  }
+);
+
 export const addNewPlayer = createAsyncThunk<any, any>(
   "ultimateEvents/update",
   async (payload) => {
@@ -88,6 +111,13 @@ export const eventsListSlice = createSlice({
 
       events[updatedEventIndex].players = [...response.newData];
       state.events = events;
+    },
+    [addEvent.fulfilled.type]: (state, action) => {
+      const response = action.payload;
+
+      if (!response.newEvent) return;
+
+      state.events = [ ...state.events, response.newEvent];
     },
   },
 });

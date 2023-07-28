@@ -1,11 +1,13 @@
+import React, { useEffect, useState } from "react";
 import "./App.css";
-import EventCard from "../EventCard/EventCard";
+import PlayerDetails from "../PlayerDetails";
 import AddNewEventButton from "../AddNewEventButton/AddNewEventButton";
-import EventsListRedux, { getEvents } from "../../redux/EventsListStore";
-import React, { useState, useEffect } from "react";
+import AddEventForm from '../AddEventForm';
+import { addEvent, getEvents } from "../../redux/EventsListStore";
 import { useSelector, useDispatch } from "react-redux";
 
 import styled from "styled-components";
+import { BarLoader } from "react-spinners";
 
 // const store = EventsListRedux
 // const [eventsList, setEventsList] = useState<EventCard>([]);
@@ -40,14 +42,29 @@ const PageSubTitle = styled.div`
   font-size: 14px;
 `;
 
+const SubHeader = styled.div`
+  font-size: 24px;
+  font-weight: 300;
+  padding: 16px 16px 0 16px;
+`;
+
 const App = () => {
   const dispatch = useDispatch();
   const events = useSelector((state) => state.eventsList.events);
-  console.log(events);
+  const [showAdd, setShowAdd] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    dispatch(getEvents());
+    setIsLoading(true);
+    dispatch(getEvents()).then(() => {
+      setIsLoading(false);
+    });
   }, []);
+  
+  const handleSubmit = (data) => {
+    dispatch(addEvent(data));
+    setShowAdd(false);
+  }
 
   return (
     <AppContainer>
@@ -55,10 +72,12 @@ const App = () => {
         <PageTitle>SINO G?!</PageTitle>
         <PageSubTitle>Thugs Ultimate</PageSubTitle>
       </Header>
-      <EventList>
-        {events.length > 0 && events.map((event) => <EventCard data={event} />)}
-      </EventList>
-      {/* <AddNewEventButton /> */}
+      {isLoading && <BarLoader width={"100%"} height={6} color={"#252e28"} /> }
+      {!isLoading && <EventList>
+        {events.length > 0 && events.map((event) => <PlayerDetails data={event} />)}
+        {showAdd && <AddEventForm onSubmit={handleSubmit} onCancel={() => setShowAdd(false)} />}
+      </EventList>}
+      {!showAdd && <AddNewEventButton onClick={() => setShowAdd(true)} />}
     </AppContainer>
   );
 };
