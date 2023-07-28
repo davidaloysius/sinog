@@ -9,71 +9,61 @@ export interface EventModel {
   players: string[];
 }
 
+const headers = {
+  "api-key": "xd12Uz1jPNghWAhmBnHhlfpAnhM8ypv3mH8Fx7OeJOTl7mIlpzOrGVQp0HplVL21",
+};
+
+const mongoConfig = {
+  collection: "Thugs Ultimate Events",
+  database: "ultimate_events",
+  dataSource: "Cluster0",
+};
+
+const baseUrl = "https://event-server-one.vercel.app/";
+
 export const getEvents = createAsyncThunk("ultimateEvents/get", async () => {
   const config: any = {
-    headers: {
-      "api-key":
-        "xd12Uz1jPNghWAhmBnHhlfpAnhM8ypv3mH8Fx7OeJOTl7mIlpzOrGVQp0HplVL21",
-    },
+    headers: { ...headers, "api-url": "find" },
   };
 
-  const response = await axios.post(
-    "https://event-server-one.vercel.app/",
-    {
-      collection: "Thugs Ultimate Events",
-      database: "ultimate_events",
-      dataSource: "Cluster0",
-    },
-    config
-  );
+  const response = await axios.post(baseUrl, mongoConfig, config);
   const data = (await response) && response.data ? response.data : response;
   return data;
 });
 
-export const addEvents = createAsyncThunk(
-  "ultimateEvents/add",
-  async (payload: any) => {
-    debugger;
+export const addNewPlayer = createAsyncThunk<any, any>(
+  "ultimateEvents/update",
+  async (payload) => {
+    console.log(payload);
+    const { id, newData } = payload;
+    const config: any = {
+      headers: { ...headers, "api-url": "updateOne" },
+    };
+
     const response = await axios.post(
-      "https://ultimate-events.vercel.app/events",
-      { ...payload }
+      baseUrl,
+      {
+        ...mongoConfig,
+        filter: {
+          _id: { $oid: id },
+        },
+        update: {
+          $set: {
+            ...newData,
+          },
+        },
+      },
+      config
     );
-    debugger;
     const data = (await response) && response.data ? response.data : response;
-    return data;
+    return { ...data, _id: id, newData: newData.players };
   }
 );
 
 export const eventsListSlice = createSlice({
   name: "eventsList",
   initialState: {
-    events: [
-      {
-          "_id": "64c21c749a3a7af1a573ba0a",
-          "title": "Shindig 2023",
-          "description": "Shindig",
-          "venue": "Dumaguete",
-          "date": "August 18-20, 2023",
-          "players": [
-              "Kalel Reyes",
-              "Kalel Reyes",
-              "Kalel Reyes",
-              "Kalel Reyes",
-              "Kalel Reyes",
-              "Kalel Reyes",
-          ]
-      },
-      {
-          "_id": "64c21f10996da2ad3ba1ae8b",
-          "title": "Wengman Cup 2023",
-          "description": "Wengman",
-          "venue": "Alabang Country Club",
-          "date": "August 12-13, 2023",
-          "players": [
-              "Kalel Reyes"
-          ]
-      }
-  ],
+    events: [{}],
   },
   reducers: {
     insertNewEvent: (state, action) => {
@@ -82,9 +72,22 @@ export const eventsListSlice = createSlice({
   },
   extraReducers: {
     [getEvents.fulfilled.type]: (state, action) => {
-      const reponse = action.payload;
-      const result: any[] = [...reponse.documents];
+      const response = action.payload;
+      const result: any[] = [...response.documents];
       state.events = result;
+    },
+    [addNewPlayer.fulfilled.type]: (state, action) => {
+      const response = action.payload;
+
+      if (!response._id) return;
+
+      const events: any = [ ...state.events ];
+      const updatedEventIndex = events.findIndex((event: any) => event?._id === response._id);
+
+      if (updatedEventIndex < 0) return;
+
+      events[updatedEventIndex].players = [...response.newData];
+      state.events = events;
     },
   },
 });

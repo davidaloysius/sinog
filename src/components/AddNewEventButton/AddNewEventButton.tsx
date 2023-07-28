@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import "../AddNewEventButton/AddNewEventButton.css";
 import EventCard from "../EventCard/EventCard";
-import { addEvents } from "../../redux/EventsListStore";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
@@ -31,7 +30,7 @@ const AddNewEventButton = () => {
       date: "August 18-20, 2023",
       players: ["Kalel Reyes"],
     };
-    dispatch(addEvents(payload));
+    // dispatch(updateEvent());
   };
 
   return (

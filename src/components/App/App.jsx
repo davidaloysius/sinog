@@ -21,6 +21,8 @@ const EventList = styled.div`
   gap: 16px;
   flex-direction: row;
   flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: flex-start;
 `;
 
 const Header = styled.div`
@@ -44,7 +46,7 @@ const App = () => {
   console.log(events);
 
   useEffect(() => {
-    // dispatch(getEvents());
+    dispatch(getEvents());
   }, []);
 
   return (
@@ -56,8 +58,7 @@ const App = () => {
       <EventList>
         {events.length > 0 && events.map((event) => <EventCard data={event} />)}
       </EventList>
-      <div className="col-md-9"></div>
-      <AddNewEventButton />
+      {/* <AddNewEventButton /> */}
     </AppContainer>
   );
 };
