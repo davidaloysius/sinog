@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import "../AddNewEventButton/AddNewEventButton.css";
-import EventCard from "../EventCard/EventCard";
-import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 const ButtonoWrapper = styled.div`
@@ -28,11 +25,10 @@ const Button = styled.div`
 `;
 
 const AddNewEventButton = ({ onClick}) => {
-  const dispatch = useDispatch<any>();
 
   return (
     <ButtonoWrapper>
-      <Button onClick={() => onClick()}>Add Tournaments</Button>
+      <Button onClick={() => onClick()}>Add Event</Button>
     </ButtonoWrapper>
   );
 };

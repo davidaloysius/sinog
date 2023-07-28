@@ -1,7 +1,12 @@
 import React, { FC, useState } from "react";
 import styled from "styled-components";
 import EventCard from "../EventCard/EventCard";
+import moment from "moment";
 import { HiX, HiCheck } from "react-icons/hi";
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
+import { BarLoader } from "react-spinners";
 
 const initialForm = {
     title: '',
@@ -9,6 +14,7 @@ const initialForm = {
     description: '',
     toDate: '',
     fromDate: '',
+    imageUrl: '',
     players: []
 }
 
@@ -28,14 +34,15 @@ const InputLabel = styled.div`
   font-size: 11px;
   text-transform: uppercase;
   font-weight: 600;
+  margin-bottom: 4px;
 `;
 
 const InputText = styled.input`
-  padding: 8px 8px;
+  padding: 12px;
   border-radius: 4px;
   border: 1px solid #848484;
   font-size: 11px;
-  width: 100%;
+  min-width: 90%;
 `;
 
 const ActionButtons = styled.div`
@@ -43,32 +50,36 @@ const ActionButtons = styled.div`
 `;
 
 const CancelBtn = styled.button`
+opacity: ${({ disabled }) => (disabled ? "0.4" : "1")};
   flex: 1;
   border: 0;
   border-radius: 0 0 0 8px;
   background: #d26665;
-  height: 35px;
+  height: 45px;
   color: white;
 
+  font-size: 14px;
   &:hover {
     background: #da7e7d;
   }
 `;
 
 const ConfirmBtn = styled.button`
+opacity: ${({ disabled }) => (disabled ? "0.4" : "1")};
   flex: 1;
   border: 0;
   border-radius: 0 0 8px 0;
   background: #198754;
-  height: 35px;
+  height: 45px;
   color: white;
+  font-size: 14px;
 
   &:hover {
     background: #41966a;
   }
 `;
 
-const AddEventForm: FC<any> = ({ onSubmit, onCancel }) => {
+const AddEventForm: FC<any> = ({ onSubmit, onCancel, isSubmitting }) => {
     const [formData, setFormData] = useState<any>({...initialForm});
 
     const handleInputChange = (event) => {
@@ -80,11 +91,19 @@ const AddEventForm: FC<any> = ({ onSubmit, onCancel }) => {
     }
 
     const submitHandler = () => {
-        onSubmit({...formData});
+        onSubmit({...formData, toDate: moment(formData.toDate).format("MMMM DD, YYYY")});
     }
 
     const inputProps = {
-        onChange: handleInputChange
+        onChange: handleInputChange,
+        disabled: isSubmitting,
+    }
+
+    const dateChangeHandler = (date, id: string) => {
+      setFormData((prevState) => ({
+        ...prevState,
+        [id]: date,
+      }))
     }
 
   return (
@@ -104,19 +123,21 @@ const AddEventForm: FC<any> = ({ onSubmit, onCancel }) => {
         </Row>
         <Row>
           <InputLabel>From Date</InputLabel>
-          <InputText type="text" id="fromDate" {...inputProps }/>
+          {/* <InputText type="text" id="fromDate" {...inputProps }/> */}
+          <DatePicker selected={formData.fromDate} onChange={(date) => dateChangeHandler(date, 'fromDate')}  customInput={<InputText disabled={isSubmitting} />}/>
         </Row>
         <Row>
           <InputLabel>To Date</InputLabel>
-          <InputText type="text" id="toDate" {...inputProps }/>
+          <DatePicker selected={formData.toDate} onChange={(date) => dateChangeHandler(date, 'toDate')} customInput={<InputText disabled={isSubmitting} />}/>
         </Row>
       </Wrapper>
+      {isSubmitting && <BarLoader width={"100%"} height={6} color={"#252e28"} />}
       <ActionButtons>
-        <CancelBtn onClick={() => onCancel()}>
-          <HiX />
+        <CancelBtn disabled={isSubmitting} onClick={() => onCancel()}>
+          <HiX size={16}/>
         </CancelBtn>
-        <ConfirmBtn onClick={submitHandler}>
-          <HiCheck />
+        <ConfirmBtn disabled={isSubmitting} onClick={submitHandler}>
+          <HiCheck size={16}/>
         </ConfirmBtn>
       </ActionButtons>
     </EventCard>

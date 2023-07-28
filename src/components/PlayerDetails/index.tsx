@@ -75,10 +75,10 @@ const PlayerList = styled.div`
 `;
 
 const PlayerInput = styled.input`
-  padding: 4px 8px;
+  padding: 8px;
   border-radius: 4px;
   border: 1px solid #848484;
-  font-size: 11px;
+  font-size: 12px;
 `;
 
 const AddPlayer = styled.button`
@@ -104,7 +104,7 @@ const CancelPlayer = styled.button`
   opacity: ${({ disabled }) => (disabled ? "0.4" : "1")};
   border: 0;
   cursor: pointer;
-  padding: 8px 8px;
+  padding: 16px 8px;
   text-align: center;
   color: #313131;
   font-size: 10px;
@@ -120,7 +120,7 @@ const NewPlayerBottom = styled.div`
   background: #198754a8;
   text-align: center;
   border-radius: 0px 0px 8px 0;
-  padding: 12px 8px;
+  padding: 16px;
   color: white;
   font-size: 11px;
   text-transform: uppercase;
@@ -216,7 +216,6 @@ const PlayerDetails = ({ data }: any) => {
 
     dispatch(addNewPlayer(payload))
       .then(() => {
-        debugger;
         setNewPlayer("");
         setShowAdd(false);
         setIsAdding(false);

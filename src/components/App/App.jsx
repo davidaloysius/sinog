@@ -52,6 +52,7 @@ const App = () => {
   const events = useSelector((state) => state.eventsList.events);
   const [showAdd, setShowAdd] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -61,8 +62,11 @@ const App = () => {
   }, []);
   
   const handleSubmit = (data) => {
-    dispatch(addEvent(data));
-    setShowAdd(false);
+    setIsSubmitting(true);
+    dispatch(addEvent(data)).then(() => {
+      setIsSubmitting(false);
+      setShowAdd(false);
+    });
   }
 
   return (
@@ -73,7 +77,7 @@ const App = () => {
       </Header>
       {!isLoading && <EventList>
         {events.length > 0 && events.map((event) => <PlayerDetails data={event} />)}
-        {showAdd && <AddEventForm onSubmit={handleSubmit} onCancel={() => setShowAdd(false)} />}
+        {showAdd && <AddEventForm onSubmit={handleSubmit} onCancel={() => setShowAdd(false)} isSubmitting={isSubmitting}/>}
       </EventList>}
       {!isLoading && !showAdd && <AddNewEventButton onClick={() => setShowAdd(true)} />}
     </AppContainer>

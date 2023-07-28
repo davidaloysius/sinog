@@ -50,7 +50,7 @@ export const addEvent = createAsyncThunk<any, any>(
       config
     );
     const data = (await response) && response.data ? response.data : response;
-    return { ...data, newEvent: {...payload} };
+    return { ...data, newEvent: {...payload, _id: data.insertedId} };
   }
 );
 
