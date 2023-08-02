@@ -34,7 +34,6 @@ export const getEvents = createAsyncThunk("ultimateEvents/get", async () => {
 export const addEvent = createAsyncThunk<any, any>(
   "ultimateEvents/addEvent",
   async (payload) => {
-  
     const config: any = {
       headers: { ...headers, "api-url": "insertOne" },
     };
@@ -44,13 +43,13 @@ export const addEvent = createAsyncThunk<any, any>(
       {
         ...mongoConfig,
         document: {
-          ...payload
-        }
+          ...payload,
+        },
       },
       config
     );
     const data = (await response) && response.data ? response.data : response;
-    return { ...data, newEvent: {...payload, _id: data.insertedId} };
+    return { ...data, newEvent: { ...payload, _id: data.insertedId } };
   }
 );
 
@@ -83,6 +82,29 @@ export const addNewPlayer = createAsyncThunk<any, any>(
   }
 );
 
+export const deleteEvent = createAsyncThunk<any, any>(
+  "ultimateEvents/deleteEvent",
+  async (payload) => {
+    const { id } = payload;
+    const config: any = {
+      headers: { ...headers, "api-url": "deleteOne" },
+    };
+
+    const response = await axios.post(
+      baseUrl,
+      {
+        ...mongoConfig,
+        filter: {
+          _id: { $oid: id },
+        },
+      },
+      config
+    );
+    const data = (await response) && response.data ? response.data : response;
+    return { ...data, _id: id };
+  }
+);
+
 export const eventsListSlice = createSlice({
   name: "eventsList",
   initialState: {
@@ -104,8 +126,10 @@ export const eventsListSlice = createSlice({
 
       if (!response._id) return;
 
-      const events: any = [ ...state.events ];
-      const updatedEventIndex = events.findIndex((event: any) => event?._id === response._id);
+      const events: any = [...state.events];
+      const updatedEventIndex = events.findIndex(
+        (event: any) => event?._id === response._id
+      );
 
       if (updatedEventIndex < 0) return;
 
@@ -117,7 +141,17 @@ export const eventsListSlice = createSlice({
 
       if (!response.newEvent) return;
 
-      state.events = [ ...state.events, response.newEvent];
+      state.events = [...state.events, response.newEvent];
+    },
+    [deleteEvent.fulfilled.type]: (state, action) => {
+      const response = action.payload;
+
+      if (!response._id) return;
+      const filteredEvents = [...state.events].filter(
+        (event: any) => event._id !== response._id
+      );
+
+      state.events = [...filteredEvents];
     },
   },
 });

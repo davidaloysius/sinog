@@ -1,35 +1,33 @@
 import React, { useState, useEffect } from "react";
-import "../AddNewEventButton/AddNewEventButton.css";
 import styled from "styled-components";
 
-const ButtonoWrapper = styled.div`
+const ButtonWrapper = styled.div`
   display: flex;
-  padding: 16px
+  padding: 16px 50px 50px 50px;
 `;
 
 const Button = styled.div`
   width: 100%;
-  background: #198754;
-  border-radius: 8px;
-  padding: 12px 16px;
+  background: #e76f8c;
+  border-radius: 32px;
+  padding: 16px 16px;
   text-align: center;
-  color: #f7f7f7;
+  color: #313131;
   text-transform: uppercase;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   font-family: Bungee;
 
   &:hover {
-    background: #41966a;
+    box-shadow: inset 1px -7px 13px 0px #0000003b;
   }
 `;
 
-const AddNewEventButton = ({ onClick}) => {
-
+const AddNewEventButton = ({ onClick }) => {
   return (
-    <ButtonoWrapper>
+    <ButtonWrapper>
       <Button onClick={() => onClick()}>Add Event</Button>
-    </ButtonoWrapper>
+    </ButtonWrapper>
   );
 };
 
